@@ -1,0 +1,1 @@
+{"rustc":14715343205281380114,"features":"[]","target":7280665969752687950,"profile":11596857583809431980,"path":1036222786711178230,"deps":[["failure v0.1.5","failure",16551178460175475856]],"local":[{"MtimeBased":[[1553750529,345903485],".fingerprint/minakanushi-fa0c08c65a8c4fb4/dep-bin-minakanushi-fa0c08c65a8c4fb4"]}],"rustflags":[],"edition":"Edition2018"}

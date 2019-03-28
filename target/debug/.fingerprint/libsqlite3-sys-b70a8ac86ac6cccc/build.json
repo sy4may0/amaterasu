@@ -1,0 +1,1 @@
+{"rustc":14715343205281380114,"features":"","target":0,"profile":0,"path":0,"deps":[],"local":[{"EnvBased":["SQLITE3_INCLUDE_DIR",null]},{"EnvBased":["SQLITE3_LIB_DIR",null]},{"EnvBased":["SQLITE3_STATIC",null]}],"rustflags":[],"edition":"Edition2015"}

@@ -1,0 +1,10 @@
+[package]
+name = "minakanushi"
+version = "0.1.0"
+authors = ["ec2-user"]
+edition = "2018"
+
+[dependencies]
+failure = "0.1.5"
+diesel = { version = "1.4.2", features = ["sqlite"] }
+dotenv = "0.13.0"

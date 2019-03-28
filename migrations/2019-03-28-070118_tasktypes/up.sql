@@ -1,0 +1,5 @@
+-- Your SQL goes here
+CREATE TABLE tasktypes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(512) NOT NULL
+)
