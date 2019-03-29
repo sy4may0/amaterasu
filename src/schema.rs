@@ -1,13 +1,25 @@
 table! {
+    achievements (id) {
+        id -> Integer,
+        task -> Integer,
+        date -> Date,
+        planned_time -> Nullable<Time>,
+        actual_time -> Nullable<Time>,
+        progress -> Integer,
+        is_close_on -> Integer,
+    }
+}
+
+table! {
     categories (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
     }
 }
 
 table! {
     tasks (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
         description -> Nullable<Text>,
         category -> Integer,
@@ -19,12 +31,13 @@ table! {
 
 table! {
     tasktypes (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
     }
 }
 
 allow_tables_to_appear_in_same_query!(
+    achievements,
     categories,
     tasks,
     tasktypes,

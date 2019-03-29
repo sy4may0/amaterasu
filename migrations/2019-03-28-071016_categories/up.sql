@@ -1,5 +1,0 @@
--- Your SQL goes here
-CREATE TABLE categories (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(512) NOT NULL
-)
