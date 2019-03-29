@@ -1,1 +1,0 @@
-/home/ec2-user/environment/minakanushi/target/debug/minakanushi: /home/ec2-user/environment/minakanushi/src/db_executor.rs /home/ec2-user/environment/minakanushi/src/main.rs /home/ec2-user/environment/minakanushi/src/modules.rs /home/ec2-user/environment/minakanushi/src/schema.rs
