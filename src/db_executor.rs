@@ -1,22 +1,22 @@
-use actix::prelude::*;
-
-use actix_web::Error;
-
-use diesel;
-use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager, Pool};
-
-use chrono::{NaiveDate};
-
-use crate::modules::*;
-
-pub struct DbExecutor(pub Pool<ConnectionManager<SqliteConnection>>);
-
-impl Actor for DbExecutor {
-    type Context = SyncContext<Self>;
-}
-
-pub struct GetTask {}
+//use actix::prelude::*;
+//
+//use actix_web::Error;
+//
+//use diesel;
+//use diesel::prelude::*;
+//use diesel::r2d2::{ConnectionManager, Pool};
+//
+//use chrono::{NaiveDate};
+//
+//use crate::modules::*;
+//
+//pub struct DbExecutor(pub Pool<ConnectionManager<SqliteConnection>>);
+//
+//impl Actor for DbExecutor {
+//    type Context = SyncContext<Self>;
+//}
+//
+//pub struct GetTask {}
 //pub struct GetTaskById { id: i32 }
 //pub struct InsertTask { task: NewTask }
 //pub struct UpdateTask { id: i32, task: NewTask }
@@ -38,9 +38,9 @@ pub struct GetTask {}
 //pub struct UpdateAchievement { id: i32, achievement: NewAchievement }
 //
 //
-impl Message for GetTask {
-    type Result = Result<Vec<Task>, Error>;
-}
+//impl Message for GetTask {
+//    type Result = Result<Vec<Task>, Error>;
+//}
 //impl Message for GetTaskById {
 //    type Result = Result<Task, Error>;
 //}
@@ -94,15 +94,31 @@ impl Message for GetTask {
 //}
 //
 //
-impl Handler<GetTask> for DbExecutor {
-    type Result = Result<Vec<Task>, Error>;
-    
-    fn handle(&mut self, msg: GetTask, _: &mut Self::Context) -> Self::Result {
-        use crate::schema::tasks::dsl::*;
-        
-        let result = tasks
-                 .load::<Task>(&self.0.get().expect("Cannot get connection Pool."))
-                 .expect("Cannot handle Database Execution: GetTask");
-        Ok(result)
-    }
-}
+//impl Handler<GetTask> for DbExecutor {
+//    type Result = Result<Vec<Task>, Error>;
+//    
+//    fn handle(&mut self, msg: GetTask, _: &mut Self::Context) -> Self::Result {
+//        use crate::schema::tasks::dsl::*;
+//        
+//        let result = tasks
+//                 .load::<Task>(&self.get().expect("Cannot get connection Pool."))
+//                 .expect("Cannot handle Database Execution: GetTask");
+//        Ok(result)
+//    }
+//}
+//
+//impl Handler<GetTaskById> for DbExecutor {
+//    type Result = Result<Task, Error>;
+//    
+//    fn handle(&mut self, msg: GetTaskById, _: &mut Self::Context) -> Self::Result {
+//        use crate::schema::tasks::dsl::*;
+//        
+//        let mut vec = tasks.filter(id.eq(msg.id))
+//                .limit(1)
+//                .load::<Task>(&self.get().expect("Cannot get connection Pool."))
+//                .expect("Cannot handle Database Execution: GetTaskById");
+//        let result = vec.pop().unwrap();
+//        Ok(result)
+//    
+//    }
+//}

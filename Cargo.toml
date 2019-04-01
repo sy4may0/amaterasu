@@ -11,7 +11,7 @@ env_logger = "0.6.1"
 chrono = { version = "0.4.0", features = ["serde"] }
 futures = "0.1.25"
 
-actix-web = "0.7.19"
+actix-web = "1.0.0-alpha.2"
 actix = "0.7.9"
 
 diesel = { version = "1.4.2", features = ["sqlite", "chrono", "r2d2"] }

@@ -19,8 +19,8 @@ mod schema;
 mod db_executor;
 
 use actix_web::{
-    error, http, middleware, server, App, AsyncResponder, Error, HttpMessage,
-    HttpRequest, HttpResponse, Json
+    error, http, middleware, App, Error, HttpMessage,
+    HttpRequest, HttpResponse, HttpServer
 };
 use actix::{
     Addr, SyncArbiter
@@ -35,16 +35,11 @@ use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager};
 
 use modules::*;
-use db_executor::DbExecutor;
-
-struct State {
-    db: Addr<DbExecutor>
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Echo {
-    state: String,
-}
+//use db_executor::DbExecutor;
+//
+//struct State {
+//    db: Addr<DbExecutor>
+//}
 
 fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -55,45 +50,39 @@ fn establish_connection() -> SqliteConnection {
             .expect("Cannot connect to database.")
 }
 
-fn index(req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    req.body()
-        .from_err()
-        .and_then(|_| {
-            Ok(HttpResponse::Ok().json(Echo{ state: "Hello?".to_string() }))
-        })
-        .responder()
-}
-
 fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
-    let sys = actix::System::new("minakanushi");
+//    let sys = actix::System::new("minakanushi");
     
     dotenv().ok();
     let url = env::var("DATABASE_URL")
             .expect("DATABASE_URL must be set to .env.");
+    let max_db_conn: u32 = env::var("MAX_DB_CONNECTION")
+            .expect("MAX_DB_CONNECTION must be set to .env.")
+            .parse()
+            .unwrap();
             
     let manager = ConnectionManager::<SqliteConnection>::new(url);
     let pool = r2d2::Pool::builder()
-            .max_size(3)
+            .max_size(max_db_conn)
             .build(manager)
             .expect("Failed to create connection pool.");
  
     
-    let addr = SyncArbiter::start(3, move || {
-        DbExecutor(pool.clone())
-    });
+//    let addr = SyncArbiter::start(3, move || {
+//        DbExecutor(pool.clone())
+//    });
     
-    server::new(|| {
+    let server = HttpServer::new(move || {
         App::new()
-            .middleware(middleware::Logger::default())
-            .resource("/", |r| r.method(http::Method::GET).f(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .shutdown_timeout(1)
-        .start();
+            .data(pool.clone())
+            .wrap(middleware::Logger::default())
+    }).bind("127.0.0.1:8080").unwrap();
+    
+    server.run();    
         
     println!("Start http server");
-    let _ = sys.run();
+//    let _ = sys.run();
 
 }
