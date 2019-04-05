@@ -24,9 +24,9 @@ use actix_web::{
 
 use dotenv::dotenv;
 use std::env;
-
-use handler::*;
-use dao::{DAO};
+use diesel::prelude::{SqliteConnection};
+use diesel::r2d2::{ConnectionManager};
+use r2d2::{Pool};
 
 fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
@@ -39,33 +39,38 @@ fn main() {
             .expect("MAX_DB_CONNECTION must be set to .env.")
             .parse()
             .unwrap();
+            
+            
+    let manager = ConnectionManager::<SqliteConnection>::new(url); 
+    let pool = Pool::builder()
+            .max_size(max_db_conn)
+            .build(manager)
+            .unwrap();
  
-    let dao = DAO::new(url, max_db_conn).unwrap();
-    
     let server = HttpServer::new(move || {
         App::new()
-            .data(dao.clone())
+            .data(pool.clone())
             .wrap(middleware::Logger::default())
             
             .service(web::resource("/tasks")
-                .route(web::get().to_async(handle_get_task_all)))
+                .route(web::get().to_async(handler::task::get_all)))
             .service(web::resource("/task/{id}")
-                .route(web::get().to_async(handle_get_task_by_id)))
+                .route(web::get().to_async(handler::task::get_by_id)))
                 
             .service(web::resource("/categories")
-                .route(web::get().to_async(handle_get_category_all)))
+                .route(web::get().to_async(handler::category::get_all)))
             .service(web::resource("/category/{id}")
-                .route(web::get().to_async(handle_get_category_by_id)))
+                .route(web::get().to_async(handler::category::get_by_id)))
                 
             .service(web::resource("/tasktypes")
-                .route(web::get().to_async(handle_get_tasktype_all)))
+                .route(web::get().to_async(handler::tasktype::get_all)))
             .service(web::resource("/tasktype/{id}")
-                .route(web::get().to_async(handle_get_tasktype_by_id)))
+                .route(web::get().to_async(handler::tasktype::get_by_id)))
                 
             .service(web::resource("/achievements")
-                .route(web::get().to_async(handle_get_achievement_all)))
+                .route(web::get().to_async(handler::achievement::get_all)))
             .service(web::resource("/achievement/{id}")
-                .route(web::get().to_async(handle_get_achievement_by_id)))             
+                .route(web::get().to_async(handler::achievement::get_by_id)))             
                 
     }).bind("127.0.0.1:8080").unwrap();
     
