@@ -43,3 +43,17 @@ pub fn select_by_id(
             .load::<TaskType>(conn)?;
     Ok(result)            
 }
+
+pub fn insert(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        new_tasktype: NewTaskType,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::insert_into(tasktypes::table)
+        .values(&new_tasktype)
+        .execute(conn)?;
+        
+    Ok(())
+}

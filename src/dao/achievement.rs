@@ -52,3 +52,17 @@ pub fn select_by_id(
             .load::<Achievement>(conn)?;
     Ok(result)
 }
+
+pub fn insert(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        new_achievement: NewAchievement,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::insert_into(achievements::table)
+        .values(&new_achievement)
+        .execute(conn)?;
+        
+    Ok(())
+}

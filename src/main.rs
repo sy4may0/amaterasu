@@ -4,6 +4,7 @@ extern crate actix_web;
 extern crate futures;
 extern crate serde_json;
 extern crate env_logger;
+extern crate bytes;
 
 extern crate dotenv;
 extern crate chrono;
@@ -56,21 +57,29 @@ fn main() {
                 .route(web::get().to_async(handler::task::get_all)))
             .service(web::resource("/task/{id}")
                 .route(web::get().to_async(handler::task::get_by_id)))
+            .service(web::resource("/task")
+                .route(web::post().to_async(handler::task::add)))
                 
             .service(web::resource("/categories")
                 .route(web::get().to_async(handler::category::get_all)))
             .service(web::resource("/category/{id}")
                 .route(web::get().to_async(handler::category::get_by_id)))
+             .service(web::resource("/category")
+                .route(web::post().to_async(handler::category::add)))               
                 
             .service(web::resource("/tasktypes")
                 .route(web::get().to_async(handler::tasktype::get_all)))
             .service(web::resource("/tasktype/{id}")
                 .route(web::get().to_async(handler::tasktype::get_by_id)))
+            .service(web::resource("/tasktype")
+                .route(web::post().to_async(handler::tasktype::add)))
                 
             .service(web::resource("/achievements")
                 .route(web::get().to_async(handler::achievement::get_all)))
             .service(web::resource("/achievement/{id}")
                 .route(web::get().to_async(handler::achievement::get_by_id)))             
+            .service(web::resource("/achievement")
+                .route(web::get().to_async(handler::achievement::add)))
                 
     }).bind("127.0.0.1:8080").unwrap();
     

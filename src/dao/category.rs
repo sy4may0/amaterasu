@@ -44,3 +44,17 @@ pub fn select_by_id(
             .load::<Category>(conn)?;
     Ok(result)
 }
+
+pub fn insert(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        new_category: NewCategory,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::insert_into(categories::table)
+        .values(&new_category)
+        .execute(conn)?;
+        
+    Ok(())
+}
