@@ -8,7 +8,7 @@ use diesel::r2d2::{ConnectionManager};
 use crate::{dao};
 use crate::dao::achievement::{NewAchievement};
 
-use crate::handler::{MAX_SIZE};
+use crate::handler::{read_bytes};
 
 type Pool = 
         r2d2::Pool<ConnectionManager<SqliteConnection>>;
@@ -48,13 +48,8 @@ pub fn add(
 ) -> impl Future<Item = HttpResponse, Error = Error> {
 
     payload.from_err()
-        .fold(BytesMut::new(), move |mut body, chunk| {
-            if (body.len() + chunk.len()) > MAX_SIZE {
-                Err(error::ErrorBadRequest("overflow"))
-            } else {
-                body.extend_from_slice(&chunk);
-                Ok(body)
-            }
+        .fold(BytesMut::new(), move |body, chunk| {
+            read_bytes(body, chunk)
         })
         .and_then(move |body| {
             let r_obj = serde_json::from_slice::<NewAchievement>(&body);
@@ -76,3 +71,36 @@ pub fn add(
             }
         })
 }
+
+pub fn update(
+    id: web::Path<String>,
+    payload: web::Payload,
+    pool: web::Data<Pool>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+
+    payload.from_err()
+        .fold(BytesMut::new(), move |body, chunk| {
+            read_bytes(body, chunk)
+        })
+        .and_then(move |body| {
+            let r_obj = serde_json::from_slice::<NewAchievement>(&body);
+            match r_obj{
+                Ok(obj) => {
+                    Either::A(web::block(move || { 
+                        dao::achievement::update(
+                            pool.get_ref(), 
+                            obj,
+                            id.into_inner().parse().unwrap(),
+                        )
+                    }).then(|res| match res {
+                        Ok(_) => Ok(HttpResponse::Ok().finish()),
+                        Err(_) => Ok(HttpResponse::InternalServerError().into()),
+                    })
+                )},
+                
+                Err(_) => Either::B(err(error::ErrorBadRequest("Json Decode Failed"))),
+                
+            }
+        })
+}
+

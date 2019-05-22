@@ -68,3 +68,25 @@ pub fn insert(
         
     Ok(())
 }
+
+pub fn update(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        new_task: NewTask,
+        task_id: i32,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::update(tasks.filter(id.eq(task_id)))
+        .set((
+            name.eq(new_task.name),
+            description.eq(new_task.description),
+            category.eq(new_task.category),
+            tasktype.eq(new_task.tasktype),
+            status.eq(new_task.status),
+            unplanned.eq(new_task.unplanned),
+        ))
+        .execute(conn)?;
+    
+    Ok(())
+}

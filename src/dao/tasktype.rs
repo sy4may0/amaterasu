@@ -57,3 +57,20 @@ pub fn insert(
         
     Ok(())
 }
+
+pub fn update(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        new_tasktype: NewTaskType,
+        tasktype_id: i32,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::update(tasktypes.filter(id.eq(tasktype_id)))
+        .set((
+            name.eq(new_tasktype.name),
+        ))
+        .execute(conn)?;
+        
+    Ok(())
+}

@@ -58,3 +58,20 @@ pub fn insert(
         
     Ok(())
 }
+
+pub fn update(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        new_category: NewCategory,
+        category_id: i32,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::update(categories.filter(id.eq(category_id)))
+        .set((
+            name.eq(new_category.name),
+        ))
+        .execute(conn)?;
+        
+    Ok(())
+}

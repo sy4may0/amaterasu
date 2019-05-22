@@ -66,3 +66,25 @@ pub fn insert(
         
     Ok(())
 }
+
+pub fn update(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        new_achievement: NewAchievement,
+        achievement_id: i32
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::update(achievements.filter(id.eq(achievement_id)))
+        .set((
+            task.eq(new_achievement.task),
+            date.eq(new_achievement.date),
+            planned_time.eq(new_achievement.planned_time),
+            actual_time.eq(new_achievement.actual_time),
+            progress.eq(new_achievement.progress),
+            is_close_on.eq(new_achievement.is_close_on),
+        ))
+        .execute(conn)?;
+        
+    Ok(())
+}
