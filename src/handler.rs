@@ -8,6 +8,13 @@ use bytes::BytesMut;
 
 const MAX_SIZE: usize = 262_144;
 
+
+#[derive(Deserialize)]
+pub struct QueryByDate {
+    begin: String,
+    end: String,
+}
+
 fn read_bytes(mut body: BytesMut, chunk: bytes::Bytes) -> Result<BytesMut, error::Error> {
     if (body.len() + chunk.len()) > MAX_SIZE {
        Err(error::ErrorBadRequest("overflow"))

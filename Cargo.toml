@@ -1,5 +1,5 @@
 [package]
-name = "minakanushi"
+name = "amaterasu"
 version = "0.1.0"
 authors = ["ec2-user"]
 edition = "2018"
@@ -12,7 +12,7 @@ chrono = { version = "0.4.0", features = ["serde"] }
 futures = "0.1.25"
 bytes = "0.4.12"
 
-actix-web = "1.0.0-alpha.2"
+actix-web = "1.0.5"
 actix = "0.7.9"
 
 diesel = { version = "1.4.2", features = ["sqlite", "chrono", "r2d2"] }

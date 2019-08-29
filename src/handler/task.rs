@@ -75,7 +75,7 @@ pub fn add(
         })
 }
 
-pub fn update(
+pub fn modify(
     id: web::Path<String>,
     payload: web::Payload,
     pool: web::Data<Pool>,
@@ -108,4 +108,20 @@ pub fn update(
                 Err(_) => Either::B(err(error::ErrorBadRequest("Json Decode Failed"))),
             }
         })
+}
+
+pub fn remove(
+    id: web::Path<String>,
+    pool: web::Data<Pool>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+  
+    web::block(move || 
+        dao::task::delete(
+            pool.get_ref(), 
+            id.into_inner().parse().unwrap()
+        )
+    ).then(|res| match res {
+        Ok(_) => Ok(HttpResponse::Ok().finish()),
+        Err(_) => Ok(HttpResponse::InternalServerError().into()),
+    })
 }

@@ -90,3 +90,16 @@ pub fn update(
     
     Ok(())
 }
+
+pub fn delete(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        task_id: i32,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::delete(tasks.filter(id.eq(task_id)))
+        .execute(conn)?;
+        
+    Ok(())
+}

@@ -75,3 +75,16 @@ pub fn update(
         
     Ok(())
 }
+
+pub fn delete(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        category_id: i32,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::delete(categories.filter(id.eq(category_id)))
+        .execute(conn)?;
+        
+    Ok(())
+}

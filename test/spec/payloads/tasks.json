@@ -1,0 +1,38 @@
+{
+    "task1": {
+        "name": "Tadokoro",
+        "description": "Obutsu",
+        "category": 1,
+        "tasktype": 1,
+        "status": 1,
+        "unplanned": 0
+    },
+    
+    "task2": {
+        "name": "!@#$%^&*()-_+=|\\~`{}[]'\":;?/<>,.",
+        "description": "!@#$%^&*()-_+=|\\~`{}[]'\":;?/<>,.",
+        "category": 1,
+        "tasktype": 1,
+        "status": 1,
+        "unplanned": 0
+    },
+    
+    "task3": {
+        "name": "テスト用タスク３",
+        "description": "テスト用タスク３",
+        "category": 1,
+        "tasktype": 1,
+        "status": 1,
+        "unplanned": 0
+    },
+    
+    "task4": {
+        "name": "㍉㍑㌢㌧㌢㌧●★⑤",
+        "description": "㍉㍑㌢㌧㌢㌧●★⑤",
+        "category": 1,
+        "tasktype": 1,
+        "status": 1,
+        "unplanned": 0
+    }
+}
+ 

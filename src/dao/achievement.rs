@@ -53,6 +53,21 @@ pub fn select_by_id(
     Ok(result)
 }
 
+pub fn select_by_date(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        begin: NaiveDate,
+        end: NaiveDate,
+    ) -> Result<Vec<Achievement>, diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    let result = achievements
+            .filter(date.between(begin, end))
+            .load::<Achievement>(conn)?;
+    Ok(result)
+    
+}
+
 pub fn insert(
         pool: &Pool<ConnectionManager<SqliteConnection>>,
         new_achievement: NewAchievement,
@@ -84,6 +99,19 @@ pub fn update(
             progress.eq(new_achievement.progress),
             is_close_on.eq(new_achievement.is_close_on),
         ))
+        .execute(conn)?;
+        
+    Ok(())
+}
+
+pub fn delete(
+        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        achievement_id: i32,
+    ) -> Result<(), diesel::result::Error> {
+    
+    let conn: &SqliteConnection = &pool.get().unwrap();
+    
+    diesel::delete(achievements.filter(id.eq(achievement_id)))
         .execute(conn)?;
         
     Ok(())

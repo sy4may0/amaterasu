@@ -40,6 +40,8 @@ fn main() {
             .expect("MAX_DB_CONNECTION must be set to .env.")
             .parse()
             .unwrap();
+    let listen = env::var("LISTEN")
+            .expect("LISTEN must be set to .env");
             
             
     let manager = ConnectionManager::<SqliteConnection>::new(url); 
@@ -54,44 +56,55 @@ fn main() {
             .wrap(middleware::Logger::default())
             
             // API service List
-            .service(web::resource("/get_tasks")
+            .service(web::resource("/tasks")
                 .route(web::get().to_async(handler::task::get_all)))
-            .service(web::resource("/get_task/{id}")
+            .service(web::resource("/task/{id}")
                 .route(web::get().to_async(handler::task::get_by_id)))
-            .service(web::resource("/add_task")
+            .service(web::resource("/task/add")
                 .route(web::post().to_async(handler::task::add)))
-            .service(web::resource("/update_task/{id}")
-                .route(web::post().to_async(handler::task::update)))
-                
-            .service(web::resource("/get_categories")
-                .route(web::get().to_async(handler::category::get_all)))
-            .service(web::resource("/get_category/{id}")
-                .route(web::get().to_async(handler::category::get_by_id)))
-            .service(web::resource("/add_category")
-                .route(web::post().to_async(handler::category::add)))               
-            .service(web::resource("/update_category/{id}")
-                .route(web::post().to_async(handler::category::update)))               
-                
-            .service(web::resource("/get_tasktypes")
-                .route(web::get().to_async(handler::tasktype::get_all)))
-            .service(web::resource("/get_tasktype/{id}")
-                .route(web::get().to_async(handler::tasktype::get_by_id)))
-            .service(web::resource("/add_tasktype")
-                .route(web::post().to_async(handler::tasktype::add)))
-            .service(web::resource("/update_tasktype/{id}")
-                .route(web::post().to_async(handler::tasktype::update)))
-                
-            .service(web::resource("/get_achievements")
-                .route(web::get().to_async(handler::achievement::get_all)))
-            .service(web::resource("/get_achievement/{id}")
-                .route(web::get().to_async(handler::achievement::get_by_id)))             
-            .service(web::resource("/add_achievement")
-                .route(web::post().to_async(handler::achievement::add)))
-            .service(web::resource("/update_achievement/{id}")
-                .route(web::post().to_async(handler::achievement::update)))
+            .service(web::resource("/task/modify/{id}")
+                .route(web::post().to_async(handler::task::modify)))
+            .service(web::resource("/task/remove/{id}")
+                .route(web::post().to_async(handler::task::remove)))
  
                 
-    }).bind("127.0.0.1:8080").unwrap();
+            .service(web::resource("/categories")
+                .route(web::get().to_async(handler::category::get_all)))
+            .service(web::resource("/category/{id}")
+                .route(web::get().to_async(handler::category::get_by_id)))
+            .service(web::resource("/category/add")
+                .route(web::post().to_async(handler::category::add)))               
+            .service(web::resource("/category/modify/{id}")
+                .route(web::post().to_async(handler::category::modify)))               
+            .service(web::resource("/category/remove/{id}")
+                .route(web::post().to_async(handler::category::remove)))               
+                
+            .service(web::resource("/tasktypes")
+                .route(web::get().to_async(handler::tasktype::get_all)))
+            .service(web::resource("/tasktype/{id}")
+                .route(web::get().to_async(handler::tasktype::get_by_id)))
+            .service(web::resource("/tasktype/add")
+                .route(web::post().to_async(handler::tasktype::add)))
+            .service(web::resource("/tasktype/modify/{id}")
+                .route(web::post().to_async(handler::tasktype::modify)))
+            .service(web::resource("/tasktype/remove/{id}")
+                .route(web::post().to_async(handler::tasktype::remove)))
+                
+            .service(web::resource("/achievements")
+                .route(web::get().to_async(handler::achievement::get_all)))
+            .service(web::resource("/achievement/{id}")
+                .route(web::get().to_async(handler::achievement::get_by_id)))             
+            .service(web::resource("/achievements/bydate")
+                .route(web::get().to_async(handler::achievement::get_by_date)))
+            .service(web::resource("/achievement/add")
+                .route(web::post().to_async(handler::achievement::add)))
+            .service(web::resource("/achievement/modify/{id}")
+                .route(web::post().to_async(handler::achievement::modify)))
+            .service(web::resource("/achievement/remove/{id}")
+                .route(web::post().to_async(handler::achievement::remove)))
+ 
+                
+    }).bind(listen).unwrap();
     
     server.run().unwrap();    
         
