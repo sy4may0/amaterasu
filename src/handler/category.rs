@@ -3,7 +3,7 @@ use futures::{Future, Stream};
 use futures::future::{err, Either};
 use bytes::BytesMut;
 
-use diesel::prelude::{SqliteConnection};
+use diesel::prelude::{MysqlConnection};
 use diesel::r2d2::{ConnectionManager};
 use crate::{dao};
 use crate::dao::category::{NewCategory};
@@ -11,7 +11,7 @@ use crate::dao::category::{NewCategory};
 use crate::handler::{MAX_SIZE};
 
 type Pool = 
-        r2d2::Pool<ConnectionManager<SqliteConnection>>;
+        r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
 pub fn get_all(
     pool: web::Data<Pool>,

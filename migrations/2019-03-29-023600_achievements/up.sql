@@ -1,6 +1,6 @@
 -- Your SQL goes here
 CREATE TABLE achievements (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     task INTEGER NOT NULL,
     date DATE NOT NULL,
     planned_time TIME,

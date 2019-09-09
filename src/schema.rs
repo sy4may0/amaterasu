@@ -13,14 +13,14 @@ table! {
 table! {
     categories (id) {
         id -> Integer,
-        name -> Text,
+        name -> Varchar,
     }
 }
 
 table! {
     tasks (id) {
         id -> Integer,
-        name -> Text,
+        name -> Varchar,
         description -> Nullable<Text>,
         category -> Integer,
         tasktype -> Integer,
@@ -32,7 +32,7 @@ table! {
 table! {
     tasktypes (id) {
         id -> Integer,
-        name -> Text,
+        name -> Varchar,
     }
 }
 

@@ -21,10 +21,10 @@ pub struct NewCategory {
 }
 
 pub fn select_all(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
     ) -> Result<Vec<Category>, diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     let result = categories.load::<Category>(conn)?;
     Ok(result)
@@ -32,11 +32,11 @@ pub fn select_all(
 }
 
 pub fn select_by_id(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         category_id: i32,
     ) -> Result<Vec<Category>, diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     let result = categories
             .filter(id.eq(category_id))
@@ -46,11 +46,11 @@ pub fn select_by_id(
 }
 
 pub fn insert(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         new_category: NewCategory,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::insert_into(categories::table)
         .values(&new_category)
@@ -60,12 +60,12 @@ pub fn insert(
 }
 
 pub fn update(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         new_category: NewCategory,
         category_id: i32,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::update(categories.filter(id.eq(category_id)))
         .set((
@@ -77,11 +77,11 @@ pub fn update(
 }
 
 pub fn delete(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         category_id: i32,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::delete(categories.filter(id.eq(category_id)))
         .execute(conn)?;

@@ -4,7 +4,7 @@ use futures::future::{err, Either};
 use bytes::BytesMut;
 use chrono::NaiveDate;
 
-use diesel::prelude::{SqliteConnection};
+use diesel::prelude::{MysqlConnection};
 use diesel::r2d2::{ConnectionManager};
 use crate::{dao};
 use crate::dao::achievement::{NewAchievement};
@@ -12,7 +12,7 @@ use crate::dao::achievement::{NewAchievement};
 use crate::handler::{read_bytes, QueryByDate};
 
 type Pool = 
-        r2d2::Pool<ConnectionManager<SqliteConnection>>;
+        r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
 pub fn get_all(
     pool: web::Data<Pool>,

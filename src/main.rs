@@ -19,13 +19,14 @@ mod schema;
 mod handler;
 mod dao;
 
+use actix_cors::Cors;
 use actix_web::{
-    web, middleware, App, HttpServer
+    http::header, web, middleware, App, HttpServer
 };
 
 use dotenv::dotenv;
 use std::env;
-use diesel::prelude::{SqliteConnection};
+use diesel::prelude::{MysqlConnection};
 use diesel::r2d2::{ConnectionManager};
 use r2d2::{Pool};
 
@@ -42,65 +43,73 @@ fn main() {
             .unwrap();
     let listen = env::var("LISTEN")
             .expect("LISTEN must be set to .env");
-            
-            
-    let manager = ConnectionManager::<SqliteConnection>::new(url); 
+
+    let manager = ConnectionManager::<MysqlConnection>::new(url);
     let pool = Pool::builder()
-            .max_size(max_db_conn)
-            .build(manager)
-            .unwrap();
- 
+                    .max_size(max_db_conn)
+                    .build(manager)
+                    .unwrap();
+
+
     let server = HttpServer::new(move || {
         App::new()
             .data(pool.clone())
+            .wrap(
+                Cors::new()
+                    .allowed_origin("http://tk2-239-29306.vs.sakura.ne.jp:8080")
+                    .allowed_methods(vec!["POST", "GET",])
+                    .allowed_headers(vec![header::ACCEPT])
+                    .allowed_header(header::CONTENT_TYPE)
+                    .max_age(3600),
+            )
             .wrap(middleware::Logger::default())
             
             // API service List
-            .service(web::resource("/tasks")
+            .service(web::resource("/get/task")
                 .route(web::get().to_async(handler::task::get_all)))
-            .service(web::resource("/task/{id}")
+            .service(web::resource("/get/task/{id}")
                 .route(web::get().to_async(handler::task::get_by_id)))
-            .service(web::resource("/task/add")
+            .service(web::resource("/add/task")
                 .route(web::post().to_async(handler::task::add)))
-            .service(web::resource("/task/modify/{id}")
+            .service(web::resource("/modify/task/{id}")
                 .route(web::post().to_async(handler::task::modify)))
-            .service(web::resource("/task/remove/{id}")
+            .service(web::resource("/remove/task/{id}")
                 .route(web::post().to_async(handler::task::remove)))
  
                 
-            .service(web::resource("/categories")
+            .service(web::resource("/get/category")
                 .route(web::get().to_async(handler::category::get_all)))
-            .service(web::resource("/category/{id}")
+            .service(web::resource("/get/category/{id}")
                 .route(web::get().to_async(handler::category::get_by_id)))
-            .service(web::resource("/category/add")
+            .service(web::resource("/add/category")
                 .route(web::post().to_async(handler::category::add)))               
-            .service(web::resource("/category/modify/{id}")
+            .service(web::resource("/modify/category/{id}")
                 .route(web::post().to_async(handler::category::modify)))               
-            .service(web::resource("/category/remove/{id}")
+            .service(web::resource("/remove/category/{id}")
                 .route(web::post().to_async(handler::category::remove)))               
                 
-            .service(web::resource("/tasktypes")
+            .service(web::resource("/get/tasktype")
                 .route(web::get().to_async(handler::tasktype::get_all)))
-            .service(web::resource("/tasktype/{id}")
+            .service(web::resource("/get/tasktype/{id}")
                 .route(web::get().to_async(handler::tasktype::get_by_id)))
-            .service(web::resource("/tasktype/add")
+            .service(web::resource("/add/tasktype")
                 .route(web::post().to_async(handler::tasktype::add)))
-            .service(web::resource("/tasktype/modify/{id}")
+            .service(web::resource("/modify/tasktype/{id}")
                 .route(web::post().to_async(handler::tasktype::modify)))
-            .service(web::resource("/tasktype/remove/{id}")
+            .service(web::resource("/remove/tasktype/{id}")
                 .route(web::post().to_async(handler::tasktype::remove)))
                 
-            .service(web::resource("/achievements")
+            .service(web::resource("/get/achievement")
                 .route(web::get().to_async(handler::achievement::get_all)))
-            .service(web::resource("/achievement/{id}")
+            .service(web::resource("/get/achievement/{id}")
                 .route(web::get().to_async(handler::achievement::get_by_id)))             
-            .service(web::resource("/achievements/bydate")
+            .service(web::resource("/get/achievement/bydate")
                 .route(web::get().to_async(handler::achievement::get_by_date)))
-            .service(web::resource("/achievement/add")
+            .service(web::resource("/add/achievement")
                 .route(web::post().to_async(handler::achievement::add)))
-            .service(web::resource("/achievement/modify/{id}")
+            .service(web::resource("/modify/achievement/{id}")
                 .route(web::post().to_async(handler::achievement::modify)))
-            .service(web::resource("/achievement/remove/{id}")
+            .service(web::resource("/remove/achievement/{id}")
                 .route(web::post().to_async(handler::achievement::remove)))
  
                 

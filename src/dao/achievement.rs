@@ -30,21 +30,21 @@ pub struct NewAchievement {
 }
 
 pub fn select_all(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
     ) -> Result<Vec<Achievement>, diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     let result = achievements.load::<Achievement>(conn)?;
     Ok(result)
 } 
 
 pub fn select_by_id(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         achievement_id: i32,
     ) -> Result<Vec<Achievement>, diesel::result::Error> {
  
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     let result = achievements
             .filter(id.eq(achievement_id))
@@ -54,12 +54,12 @@ pub fn select_by_id(
 }
 
 pub fn select_by_date(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         begin: NaiveDate,
         end: NaiveDate,
     ) -> Result<Vec<Achievement>, diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     let result = achievements
             .filter(date.between(begin, end))
@@ -69,11 +69,11 @@ pub fn select_by_date(
 }
 
 pub fn insert(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         new_achievement: NewAchievement,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::insert_into(achievements::table)
         .values(&new_achievement)
@@ -83,12 +83,12 @@ pub fn insert(
 }
 
 pub fn update(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         new_achievement: NewAchievement,
         achievement_id: i32
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::update(achievements.filter(id.eq(achievement_id)))
         .set((
@@ -105,11 +105,11 @@ pub fn update(
 }
 
 pub fn delete(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         achievement_id: i32,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::delete(achievements.filter(id.eq(achievement_id)))
         .execute(conn)?;

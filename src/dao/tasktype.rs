@@ -21,21 +21,21 @@ pub struct NewTaskType {
 }
 
 pub fn select_all(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
     ) -> Result<Vec<TaskType>, diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     let result = tasktypes.load::<TaskType>(conn)?;
     Ok(result)            
 }
 
 pub fn select_by_id(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         tasktype_id: i32,
     ) -> Result<Vec<TaskType>, diesel::result::Error> {
  
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     let result = tasktypes
             .filter(id.eq(tasktype_id))
@@ -45,11 +45,11 @@ pub fn select_by_id(
 }
 
 pub fn insert(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         new_tasktype: NewTaskType,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::insert_into(tasktypes::table)
         .values(&new_tasktype)
@@ -59,12 +59,12 @@ pub fn insert(
 }
 
 pub fn update(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         new_tasktype: NewTaskType,
         tasktype_id: i32,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::update(tasktypes.filter(id.eq(tasktype_id)))
         .set((
@@ -76,11 +76,11 @@ pub fn update(
 }
 
 pub fn delete(
-        pool: &Pool<ConnectionManager<SqliteConnection>>,
+        pool: &Pool<ConnectionManager<MysqlConnection>>,
         tasktype_id: i32,
     ) -> Result<(), diesel::result::Error> {
     
-    let conn: &SqliteConnection = &pool.get().unwrap();
+    let conn: &MysqlConnection = &pool.get().unwrap();
     
     diesel::delete(tasktypes.filter(id.eq(tasktype_id)))
         .execute(conn)?;
